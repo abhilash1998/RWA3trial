@@ -23,7 +23,7 @@ namespace motioncontrol {
          *
          * @param node Node handle
          */
-        class Competition(ros::NodeHandle& node);
+        explicit Competition(ros::NodeHandle& node);
         // Competition(ros::NodeHandle& node);
         /**
          * @brief Initialize components of the class (suscribers, publishers, etc)
@@ -57,10 +57,7 @@ namespace motioncontrol {
         void competitionOrderCallback(const nist_gear::Order::ConstPtr& msg);
         void logicalCamera1Callback(const nist_gear::LogicalCameraImage::ConstPtr & msg);
         void logicalCamera2Callback(const nist_gear::LogicalCameraImage::ConstPtr & msg);
-        void qualityControl1Callback(const nist_gear::LogicalCameraImage::ConstPtr & msg);
-        void qualityControl2Callback(const nist_gear::LogicalCameraImage::ConstPtr & msg);
-        void qualityControl3Callback(const nist_gear::LogicalCameraImage::ConstPtr & msg);
-        void qualityControl4Callback(const nist_gear::LogicalCameraImage::ConstPtr & msg);
+
         
         /**
          * @brief Get the Clock objectGet
@@ -96,19 +93,9 @@ namespace motioncontrol {
         const std::pair<std::string, std::string >& get_logical_camera2_data() {
             return logical_camera_2_;
         }
-        const bool& get_quality_camera1_data(){
-            return quality_camera_1_;
-        }
-         const bool& get_quality_camera2_data(){
-            return quality_camera_2_;
-        }
-         const bool& get_quality_camera3_data(){
-            return quality_camera_3_;
-        }
-         const bool& get_quality_camera4_data(){
-            return quality_camera_4_;
-        }
-
+        
+        
+        // std::vector <bool> quality_camera={ &quality_camera_1,&quality_camera_2,&quality_camera_3,&quality_camera_4_}; 
        
 
 
@@ -138,20 +125,14 @@ namespace motioncontrol {
         ros::Subscriber competition_logical_camera_1_subscriber_;
         /*!< subscriber to the topic /ariac/logical_camera_2 */
         ros::Subscriber competition_logical_camera_2_subscriber_;
-        ros::Subscriber competition_quality_control_sensor_1_subscriber;
-        ros::Subscriber competition_quality_control_sensor_2_subscriber;
-        ros::Subscriber competition_quality_control_sensor_3_subscriber;
-        ros::Subscriber competition_quality_control_sensor_4_subscriber;
+
         // Hash maps of part types
         // example of assembly_blue_battery found by 2 logical cameras
         //<assembly_battery_blue, <logical_camera_1, logical_camera_3> >
         std::map<std::string, std::vector<std::string> > logical_camera_map_;
         std::pair<std::string, std::string> logical_camera_1_;
         std::pair<std::string, std::string> logical_camera_2_;
-        bool quality_camera_1_;
-        bool quality_camera_2_;
-        bool quality_camera_3_;
-        bool quality_camera_4_;
+
          
 
     };

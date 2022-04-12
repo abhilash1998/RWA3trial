@@ -58,14 +58,14 @@ int main(int argc, char** argv) {
     // create an instance of the kitting arm
     motioncontrol::Arm arm(node_handle);
     arm.init();
-    arm.set_competition_object(competition);
+    
     // Wait for order to be recieved
     ros::Rate rate = 2;
     while (competition.getKittingShipments().size() == 0) {
         ROS_INFO_STREAM("Waiting for order");
         rate.sleep();
     }
-
+    // arm.quality_camera=competition.quality_camera;
     // if we get to this point it means we started receiving orders
     auto kitting_shipments = competition.getKittingShipments();
     arm.goToPresetLocation("home1");
@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
     // parse each kitting shipment
     for (const auto& kitting_shipment : kitting_shipments) {
         counter++;
-        arm.counter=counter;
+        arm.counter=&counter;
         // list of different product types
         // if the shipment has 2 blue batteries then only 1 blue
         // battery is placed in this list.

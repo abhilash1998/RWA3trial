@@ -18,8 +18,10 @@
 #include <nist_gear/VacuumGripperControl.h>
 // custom
 #include "utils.h"
-#include"competition.h"
+#include <nist_gear/LogicalCameraImage.h>
 
+// #include"competition.h"
+// using namespace motioncontrol;
 namespace motioncontrol {
 
 
@@ -43,29 +45,21 @@ namespace motioncontrol {
 
 
 
-        motioncontrol::Competition competition_object;
-        void set_competition_object(motioncontrol::Competition& competition){
-            competition_object= competition;
-        }
 
 
-        bool get_quality_camera1_;
-        bool get_quality_camera2_;
-        bool get_quality_camera3_;
-        bool get_quality_camera4_;
 
-        void get_quality_camera1_data(){
-            get_quality_camera1_ = competition_object.get_quality_camera1_data();
-        }
-         void get_quality_camera2_data(){
-            get_quality_camera2_ = competition_object.get_quality_camera2_data();
-        }
-        void get_quality_camera3_data(){
-            get_quality_camera3_ = competition_object.get_quality_camera3_data();
-        }
-         void get_quality_camera4_data(){
-            get_quality_camera4_= competition_object.get_quality_camera4_data();
-        }
+        // void get_quality_camera1_data(){
+        //     get_quality_camera1_ = competition_object.quality_camera_1_;
+        // }
+        //  void get_quality_camera2_data(){
+        //     get_quality_camera2_ = competition_object.get_quality_camera2_data();
+        // }
+        // void get_quality_camera3_data(){
+        //     get_quality_camera3_ = competition_object.get_quality_camera3_data();
+        // }
+        //  void get_quality_camera4_data(){
+        //     get_quality_camera4_= competition_object.get_quality_camera4_data();
+        // }
         /**
          * @brief Initialize the object
          */
@@ -79,7 +73,23 @@ namespace motioncontrol {
 
         void activateGripper();
         void deactivateGripper();
-        
+        void qualityControl1Callback(const nist_gear::LogicalCameraImage::ConstPtr & msg);
+        void qualityControl2Callback(const nist_gear::LogicalCameraImage::ConstPtr & msg);
+        void qualityControl3Callback(const nist_gear::LogicalCameraImage::ConstPtr & msg);
+        void qualityControl4Callback(const nist_gear::LogicalCameraImage::ConstPtr & msg);
+                
+         bool& get_quality_camera1_data(){
+            return quality_camera_1;
+        }
+          bool& get_quality_camera2_data(){
+            return quality_camera_2;
+        }
+          bool& get_quality_camera3_data(){
+            return quality_camera_3;
+        }
+          bool& get_quality_camera4_data(){
+            return quality_camera_4;
+        }
         /**
          * @brief Move the joint linear_arm_actuator_joint only
          *
@@ -97,13 +107,26 @@ namespace motioncontrol {
         // Send command message to robot controller
         bool sendJointPosition(trajectory_msgs::JointTrajectory command_msg);
         void goToPresetLocation(std::string location_name);
-
+        // void get_current_quality_value(vector<bool> &quality){
+        //     for (bool i :quality)){quality_camera.append()}
+        
+        // }
         //--preset locations;
         start home1_, home2_;
         agv agv1_, agv2_, agv3_, agv4_;
-                int counter;
+                int* counter;
+        bool quality_camera_1;
+        bool quality_camera_2;
+        bool quality_camera_3;
+        bool quality_camera_4;
+        bool quality_camera[4];
+        std::string get_camera_frame_of_moving_object(){
+            return camera_frame_of_moving_object;
+
+        } 
         private:
-        
+      
+        // std::vector<bool> quality_camera;
         std::vector<double> joint_group_positions_;
         std::vector<double> joint_arm_positions_;
         ros::NodeHandle node_;
@@ -113,7 +136,7 @@ namespace motioncontrol {
         sensor_msgs::JointState current_joint_states_;
         control_msgs::JointTrajectoryControllerState arm_controller_state_;
 
-        
+        std::string camera_frame_of_moving_object;
 
         nist_gear::VacuumGripperState gripper_state_;
         // gripper state subscriber
@@ -129,7 +152,7 @@ namespace motioncontrol {
         std::string part_type_name;
       
        
-        int &get_counter(){
+        int *get_counter(){
             return counter;
         }
         auto get_part_type_name(){
@@ -140,10 +163,18 @@ namespace motioncontrol {
         //     return competition.quality_camera_1_;
         // }
         // callbacks
+ 
         void gripper_state_callback(const nist_gear::VacuumGripperState::ConstPtr& gripper_state_msg);
         void arm_joint_states_callback_(const sensor_msgs::JointState::ConstPtr& joint_state_msg);
         void arm_controller_state_callback(const control_msgs::JointTrajectoryControllerState::ConstPtr& msg);
         void check_faulty_part(std::string part_type,geometry_msgs::Pose part_pose_in_frame,std::string agv);
+        
+        /*!< subscriber to the topic /ariac/quality_control_sensor_1 */
+        ros::Subscriber Arm_quality_control_sensor_1_subscriber;
+        /*!< subscriber to the topic /ariac/quality_control_sensor_2 */
+        ros::Subscriber Arm_quality_control_sensor_2_subscriber;
+        ros::Subscriber Arm_quality_control_sensor_3_subscriber;
+        ros::Subscriber Arm_quality_control_sensor_4_subscriber;
 
     };
 }//namespace

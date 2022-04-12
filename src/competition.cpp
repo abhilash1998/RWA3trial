@@ -33,7 +33,7 @@ namespace motioncontrol {
         // subscribe to the '/ariac/logical_camera_2' topic.
         competition_logical_camera_2_subscriber_ = node_.subscribe(
             "/ariac/logical_camera_2", 10, &Competition::logicalCamera2Callback, this);
-        competition_quality_control_sensor_1_subscriber=node_.subscribe("/ariac/quality_control_sensor_1",10,&Competition::qualityControl1Callback);
+
         // start the competition
         startCompetition();
     }
@@ -62,50 +62,7 @@ namespace motioncontrol {
             }
         }
     }
-    void Competition::qualityControl1Callback(const nist_gear::LogicalCameraImage::ConstPtr& msg) {
-        // ROS_INFO_STREAM("MAP size: " << logical_camera_map_.size());
-        if (msg->models.size() > 0) {
-            quality_camera_1_=true;
-            }
-        
-        else
-        {
-            quality_camera_1_=false;
-        }
-    }
-    void Competition::qualityControl2Callback(const nist_gear::LogicalCameraImage::ConstPtr& msg) {
-        // ROS_INFO_STREAM("MAP size: " << logical_camera_map_.size());
-        if (msg->models.size() > 0) {
-            quality_camera_2_=true;
-            }
-        
-        else
-        {
-            quality_camera_2_=false;
-        }
-    }
-void Competition::qualityControl3Callback(const nist_gear::LogicalCameraImage::ConstPtr& msg) {
-        // ROS_INFO_STREAM("MAP size: " << logical_camera_map_.size());
-        if (msg->models.size() > 0) {
-            quality_camera_3_=true;
-            }
-        
-        else
-        {
-            quality_camera_3_=false;
-        }
-    }
-void Competition::qualityControl4Callback(const nist_gear::LogicalCameraImage::ConstPtr& msg) {
-        // ROS_INFO_STREAM("MAP size: " << logical_camera_map_.size());
-        if (msg->models.size() > 0) {
-            quality_camera_4_=true;
-            }
-        
-        else
-        {
-            quality_camera_4_=false;
-        }
-    }
+
 
 
     
